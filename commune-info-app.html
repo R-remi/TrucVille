@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Communes France</title>
+    <style>
+        /* Styles de base à définir */
+    </style>
+</head>
+<body>
+    <h1>Info Communes France</h1>
+    <input type="text" id="communeInput" placeholder="Entrez le nom d'une commune">
+    <button onclick="searchCommune()">Rechercher</button>
+    <div id="results"></div>
+    <div id="map"></div>
+    <div id="weather"></div>
+
+    <script>
+        async function searchCommune() {
+            const commune = document.getElementById('communeInput').value;
+            try {
+                const response = await fetch(`https://geo.api.gouv.fr/communes?nom=${commune}&fields=nom,code,codesPostaux,codeDepartement,codeRegion,population&format=json&geometry=centre`);
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        function displayResults(data) {
+            // Afficher les résultats
+            // TODO: Implémenter l'affichage des données
+        }
+
+        // TODO: Implémenter les fonctions pour la carte et la météo
+    </script>
+</body>
+</html>
