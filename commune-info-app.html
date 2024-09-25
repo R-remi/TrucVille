@@ -37,12 +37,15 @@
             if (data.length > 0) {
                 displayResults(data[0]);
                 updateMap(data[0]);
+                getWeather(commune); // Appel de la fonction pour obtenir la météo
             } else {
                 document.getElementById('results').innerHTML = "Aucune commune trouvée.";
+                document.getElementById('weather').innerHTML = "";
             }
         } catch (error) {
             console.error('Erreur:', error);
             document.getElementById('results').innerHTML = "Une erreur s'est produite lors de la recherche.";
+            document.getElementById('weather').innerHTML = "";
         }
     }
 
@@ -71,6 +74,34 @@
         } else {
             console.error('Coordonnées non disponibles pour cette commune');
             document.getElementById('results').innerHTML += "<p>Coordonnées non disponibles pour cette commune.</p>";
+        }
+    }
+
+    async function getWeather(commune) {
+        try {
+            const apiKey = '98be94def7b24ab19a0124311242509'; // Remplacer par votre clé API
+            const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${commune}&aqi=no`);
+            const weatherData = await response.json();
+            displayWeather(weatherData);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données météo:', error);
+            document.getElementById('weather').innerHTML = "<p>Impossible de récupérer les informations météo.</p>";
+        }
+    }
+
+    function displayWeather(weatherData) {
+        const weatherDiv = document.getElementById('weather');
+        if (weatherData && weatherData.current) {
+            weatherDiv.innerHTML = `
+                <h3>Météo actuelle à ${weatherData.location.name}</h3>
+                <p>Température: ${weatherData.current.temp_c}°C</p>
+                <p>Condition: ${weatherData.current.condition.text}</p>
+                <img src="${weatherData.current.condition.icon}" alt="Icône météo">
+                <p>Humidité: ${weatherData.current.humidity}%</p>
+                <p>Vent: ${weatherData.current.wind_kph} km/h</p>
+            `;
+        } else {
+            weatherDiv.innerHTML = "<p>Informations météo indisponibles.</p>";
         }
     }
 
